@@ -1,4 +1,6 @@
 import scala.util.parsing.combinator.RegexParsers
+import scala.io.Source
+import cats.implicits._
 
 object ExprParser extends RegexParsers {
   def number: Parser[Int] = """-?\d+""".r ^^ { _.toInt }
@@ -19,4 +21,10 @@ object ExprParser extends RegexParsers {
   } | "print " ~ expr ^^ { case _ ~ e => SPrint(e) }
 
   def program: Parser[List[Stmt]] = repsep(stmt, ";")
+
+  def programFromFile(path: String): Option[List[Stmt]] = {
+    val f = Source.fromFile("sample.txt")
+    val ls = f.getLines.toList
+    ls.map( line => parseAll(stmt, line).map({ Option(_) }).getOrElse(None) ).sequence
+  }
 }

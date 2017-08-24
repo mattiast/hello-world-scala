@@ -1,7 +1,8 @@
 import scala.collection.immutable.HashSet
 
 object Main extends App {
-  println("rello, World!")
+  val p = ExprParser.programFromFile("sample.txt")
+  p.fold(())(Expr0.runProgram)
 }
 
 object Foo {
