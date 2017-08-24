@@ -1,4 +1,4 @@
-import scala.util.parsing.combinator.Parsers
+import atto._, Atto._
 
 sealed trait Expr
 case class ELit(value: Int) extends Expr
@@ -51,7 +51,7 @@ object Expr0 {
   def test2: Option[Int] = {
     val str = "1+1+(2+x)"
     val ctx = Context(Map(("x", 4)))
-    val eo = ExprParser.parseAll(ExprParser.expr, str).map({Option(_)}).getOrElse(None)
+    val eo = (ExprParser.expr parseOnly str).option
     for {
       e <- eo
       result <- evalute(e, ctx)
@@ -60,8 +60,8 @@ object Expr0 {
 
   def test3: Unit = {
     val str = "x=1;print x;x=x+1;print x"
-    val r = ExprParser.parseAll(ExprParser.program, str)
-    val p = r.getOrElse(List())
+    val r = ExprParser.program parseOnly str
+    val p = r.option.getOrElse(List())
     runProgram(p)
   }
 }
