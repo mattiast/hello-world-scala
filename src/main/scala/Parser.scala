@@ -13,4 +13,10 @@ object ExprParser extends RegexParsers {
   def myterm: Parser[Expr] = number ^^ { ELit(_) } | variable ^^ { EVar(_) } | "(" ~ expr ~ ")" ^^ {
     case _ ~ e ~ _ => e
   }
+
+  def stmt: Parser[Stmt] = variable ~ "=" ~ expr ^^ {
+    case v ~ _ ~ e => SAssign(v, e)
+  } | "print " ~ expr ^^ { case _ ~ e => SPrint(e) }
+
+  def program: Parser[List[Stmt]] = repsep(stmt, ";")
 }
