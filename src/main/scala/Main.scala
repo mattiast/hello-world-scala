@@ -2,7 +2,7 @@ import scala.collection.immutable.HashSet
 
 object Main extends App {
   val p = ExprParser.programFromFile("sample.txt")
-  p.fold(())(Expr0.runProgram)
+  p.fold(println("parse error"))(Expr0.runProgram)
 }
 
 object Foo {
